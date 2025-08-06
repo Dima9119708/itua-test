@@ -1,0 +1,37 @@
+name: Deploy to GitHub Pages
+
+env:
+  VITE_APP_BASENAME: '/project-architecture-demo/'
+
+on:
+  push:
+    branches:
+      - main  # или ветка, с которой вы хотите деплоить
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Шаг 1: Проверка исходного кода
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Шаг 2: Установка Node.js (если используете его)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'  # или версия, которую вы используете
+
+      # Шаг 3: Установка зависимостей и сборка проекта
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build  # или ваша команда для сборки
+
+      # Шаг 4: Деплой на GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./dist  # или путь к директории с результатом сборки
