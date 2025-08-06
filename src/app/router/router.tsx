@@ -3,55 +3,60 @@ import { createBrowserRouter, redirect } from 'react-router-dom'
 import { ROUTER_PATHS } from '@/shared/config/router/config'
 import HydrateFallbackElement from '@/shared/ui/hydrate-fallback-element/hydrate-fallback-element'
 
-export const router = createBrowserRouter([
-    {
-        path: '/',
-        loader: async () => {
-            const token = localStorage.getItem('token')
+const basename = import.meta.env.VITE_APP_BASENAME
 
-            if (!token) {
-                return redirect('/auth')
-            }
+export const router = createBrowserRouter(
+    [
+        {
+            path: '/',
+            loader: async () => {
+                const token = localStorage.getItem('token')
 
-            return redirect('/employees')
+                if (!token) {
+                    return redirect('/auth')
+                }
+
+                return redirect('/employees')
+            },
         },
-    },
-    {
-        path: ROUTER_PATHS.employees,
-        lazy: async () => {
-            const module = await import('@/pages/employees/view')
+        {
+            path: ROUTER_PATHS.employees,
+            lazy: async () => {
+                const module = await import('@/pages/employees/view')
 
-            return {
-                element: <module.default />,
-            }
+                return {
+                    element: <module.default />,
+                }
+            },
+            hydrateFallbackElement: <HydrateFallbackElement />,
         },
-        hydrateFallbackElement: <HydrateFallbackElement />,
-    },
-    {
-        path: ROUTER_PATHS.companyStructure,
-        lazy: async () => {
-            await new Promise((resolve) => setTimeout(resolve, 5000))
-            const module = await import('@/pages/company-structure/view')
+        {
+            path: ROUTER_PATHS.companyStructure,
+            lazy: async () => {
+                await new Promise((resolve) => setTimeout(resolve, 5000))
+                const module = await import('@/pages/company-structure/view')
 
-            return {
-                element: <module.default />,
-            }
+                return {
+                    element: <module.default />,
+                }
+            },
+            hydrateFallbackElement: <HydrateFallbackElement />,
         },
-        hydrateFallbackElement: <HydrateFallbackElement />,
-    },
-    {
-        path: ROUTER_PATHS.auth,
-        lazy: async () => {
-            const module = await import('@/pages/auth/view')
+        {
+            path: ROUTER_PATHS.auth,
+            lazy: async () => {
+                const module = await import('@/pages/auth/view')
 
-            return {
-                element: <module.default />,
-            }
+                return {
+                    element: <module.default />,
+                }
+            },
+            hydrateFallbackElement: <HydrateFallbackElement />,
         },
-        hydrateFallbackElement: <HydrateFallbackElement />,
-    },
-    {
-        path: '*',
-        element: <div>404</div>,
-    },
-])
+        {
+            path: '*',
+            element: <div>404</div>,
+        },
+    ],
+    { basename: basename }
+)
