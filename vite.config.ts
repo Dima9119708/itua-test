@@ -11,6 +11,7 @@ export default defineConfig({
         },
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
+    base: process.env.VITE_APP_BASENAME,
     define: {
         'import.meta.env.VITE_APP_BASENAME': JSON.stringify(process.env.VITE_APP_BASENAME),
     },
