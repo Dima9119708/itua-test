@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "cross-env VITE_APP_BASENAME=/itua-test/ vite build",
+    "build": "cross-env vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
