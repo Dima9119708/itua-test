@@ -15,4 +15,3 @@ export default defineConfig({
         'import.meta.env.VITE_APP_BASENAME': JSON.stringify(process.env.VITE_APP_BASENAME),
     },
 })
-Fi
