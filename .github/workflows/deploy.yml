@@ -1,37 +1,30 @@
 name: Deploy to GitHub Pages
 
-env:
-  VITE_APP_BASENAME: '/itua-test/'
-
 on:
   push:
     branches:
-      - main  # или ветка, с которой вы хотите деплоить
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Шаг 1: Проверка исходного кода
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Шаг 2: Установка Node.js (если используете его)
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'  # или версия, которую вы используете
+      - name: Install dependencies
+        run: npm install
 
-      # Шаг 3: Установка зависимостей и сборка проекта
-      - name: Install dependencies and build
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
         run: |
-          npm install
-          npm run build  # или ваша команда для сборки
-
-      # Шаг 4: Деплой на GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./dist  # или путь к директории с результатом сборки
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/${{ github.repository }}.git
+          git checkout --orphan gh-pages
+          git --work-tree dist add --all
+          git --work-tree dist commit -m "Deploy"
+          git push origin HEAD:gh-pages --force
